@@ -26,14 +26,14 @@ pipeline {
         stage('Deploy to EC2') {
             steps {
                 // Use SSH credentials stored in Jenkins
-               sshagent(credentials: ['ec2-private-key']) {
+                    sshagent(credentials: ['ec2-private-key']) {
     sh '''
     ssh -o StrictHostKeyChecking=no admin@56.228.25.161 "
-        export NVM_DIR=\$HOME/.nvm &&
-        [ -s \$NVM_DIR/nvm.sh ] && \. \$NVM_DIR/nvm.sh &&
-        cd /home/admin/DevopsPractise &&
-        git pull origin master &&
-        npm install &&
+        export NVM_DIR=$HOME/.nvm
+        [ -s $NVM_DIR/nvm.sh ] && . $NVM_DIR/nvm.sh
+        cd /home/admin/DevopsPractise
+        git pull origin master
+        npm install
         pm2 restart app || pm2 start server.js --name app
     "
     '''
