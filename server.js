@@ -9,7 +9,7 @@ app.get("/test",(req,res)=>{
     res.send("CI/CD testing")
 })
 
-app.get("/new-test",(req,re)=>{
+app.get("/new-test",(req,res)=>{
     res.send("new ci cd working");
 })
 
