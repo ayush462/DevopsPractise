@@ -2,8 +2,10 @@ pipeline {
     agent any
 
     environment {
-        // Add any environment variables you need here
         NODE_VERSION = "22.17.0"
+        APP_DIR = "/home/admin/DevopsPractise"
+        SSH_USER = "admin"
+        SSH_HOST = "56.228.25.161"
     }
 
     stages {
@@ -22,22 +24,25 @@ pipeline {
 
         stage('Deploy to EC2') {
             steps {
-                sshagent(credentials: ['ec2-private-key']) { // <-- your Jenkins SSH credential ID
-                    sh '''
-                    ssh -o StrictHostKeyChecking=no admin@56.228.25.161 '
-                        export NVM_DIR=$HOME/.nvm
-                        [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
-                        [ -s "$NVM_DIR/bash_completion" ] && . "$NVM_DIR/bash_completion"
+                sshagent(credentials: ['ec2-private-key']) {
+                    sh """
+                    ssh -o StrictHostKeyChecking=no ${SSH_USER}@${SSH_HOST} '
+                        export NVM_DIR=\$HOME/.nvm
+                        [ -s "\$NVM_DIR/nvm.sh" ] && . "\$NVM_DIR/nvm.sh"
+                        [ -s "\$NVM_DIR/bash_completion" ] && . "\$NVM_DIR/bash_completion"
 
-                        nvm use ${NODE_VERSION}
+                        nvm use ${NODE_VERSION} || nvm install ${NODE_VERSION} && nvm use ${NODE_VERSION}
 
-                        cd /home/admin/DevopsPractise
+                        cd ${APP_DIR}
+                        git reset --hard
                         git pull origin master
                         npm install
-                         pm2 delete app || true
-                        pm2 start server.js --name app
+
+                        # Ensure PM2 fully restarts
+                        pm2 delete app || true
+                        pm2 start server.js --name app --update-env
                     '
-                    '''
+                    """
                 }
             }
         }
