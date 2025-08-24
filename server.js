@@ -9,6 +9,10 @@ app.get("/test",(req,res)=>{
     res.send("CI/CD testing")
 })
 
+app.get("/new-test",(req,re)=>{
+    res.send("new ci cd working");
+})
+
 app.get("/newRoute",(req,res)=>{
     res.send("This is ci cd working fine");
 })
