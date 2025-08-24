@@ -9,6 +9,6 @@ app.get("/test",(req,res)=>{
     res.send("CI/CD testing")
 })
 
-app.listen(3000,()=>{
+app.listen(3000,0.0.0.0,()=>{
     console.log("app is running");
 })
