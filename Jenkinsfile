@@ -4,7 +4,9 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'master', url: 'git@github.com:ayush462/DevopsPractise.git'
+                git branch: 'master',
+                    url: 'https://github.com/ayush462/DevopsPractise.git',
+                    credentialsId: 'Github-credential'
             }
         }
 
