@@ -34,7 +34,8 @@ pipeline {
                         cd /home/admin/DevopsPractise
                         git pull origin master
                         npm install
-                        pm2 restart app || pm2 start server.js --name app
+                         pm2 delete app || true
+                        pm2 start server.js --name app
                     '
                     '''
                 }
